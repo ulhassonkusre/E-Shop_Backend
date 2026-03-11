@@ -30,24 +30,24 @@ public class CartController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<CartResponseDto> GetCart()
+    public async Task<ActionResult<CartResponseDto>> GetCart()
     {
         var userId = GetUserId();
         if (userId == 0)
             return Unauthorized();
 
-        var cart = _cartService.GetCart(userId);
+        var cart = await _cartService.GetCartAsync(userId);
         return Ok(cart);
     }
 
     [HttpPost("items")]
-    public ActionResult<CartItemResponseDto> AddToCart([FromBody] AddToCartDto dto)
+    public async Task<ActionResult<CartItemResponseDto>> AddToCart([FromBody] AddToCartDto dto)
     {
         var userId = GetUserId();
         if (userId == 0)
             return Unauthorized();
 
-        var item = _cartService.AddToCart(userId, dto);
+        var item = await _cartService.AddToCartAsync(userId, dto);
         if (item == null)
             return BadRequest();
 
@@ -55,13 +55,13 @@ public class CartController : ControllerBase
     }
 
     [HttpPut("items/{itemId}")]
-    public ActionResult<CartItemResponseDto> UpdateCartItem(int itemId, [FromBody] UpdateCartItemDto dto)
+    public async Task<ActionResult<CartItemResponseDto>> UpdateCartItem(int itemId, [FromBody] UpdateCartItemDto dto)
     {
         var userId = GetUserId();
         if (userId == 0)
             return Unauthorized();
 
-        var item = _cartService.UpdateCartItem(userId, itemId, dto);
+        var item = await _cartService.UpdateCartItemAsync(userId, itemId, dto);
         if (item == null)
             return NotFound();
 
@@ -69,26 +69,26 @@ public class CartController : ControllerBase
     }
 
     [HttpDelete("items/{itemId}")]
-    public ActionResult RemoveFromCart(int itemId)
+    public async Task<ActionResult> RemoveFromCart(int itemId)
     {
         var userId = GetUserId();
         if (userId == 0)
             return Unauthorized();
 
-        if (!_cartService.RemoveFromCart(userId, itemId))
+        if (!await _cartService.RemoveFromCartAsync(userId, itemId))
             return NotFound();
 
         return NoContent();
     }
 
     [HttpDelete("clear")]
-    public ActionResult ClearCart()
+    public async Task<ActionResult> ClearCart()
     {
         var userId = GetUserId();
         if (userId == 0)
             return Unauthorized();
 
-        _cartService.ClearCart(userId);
+        await _cartService.ClearCartAsync(userId);
         return NoContent();
     }
 }

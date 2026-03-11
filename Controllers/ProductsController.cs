@@ -17,22 +17,22 @@ public class ProductsController : ControllerBase
     }
 
     [HttpGet]
-    public ActionResult<List<Product>> GetAll([FromQuery] string? search)
+    public async Task<ActionResult<List<Product>>> GetAll([FromQuery] string? search)
     {
         if (!string.IsNullOrWhiteSpace(search))
         {
-            var products = _productService.Search(search);
+            var products = await _productService.SearchAsync(search);
             return Ok(products);
         }
-        
-        var allProducts = _productService.GetAll();
+
+        var allProducts = await _productService.GetAllAsync();
         return Ok(allProducts);
     }
 
     [HttpGet("{id}")]
-    public ActionResult<Product> GetById(int id)
+    public async Task<ActionResult<Product>> GetById(int id)
     {
-        var product = _productService.GetById(id);
+        var product = await _productService.GetByIdAsync(id);
         if (product == null)
             return NotFound();
 
@@ -41,23 +41,23 @@ public class ProductsController : ControllerBase
 
     [Authorize]
     [HttpPost]
-    public ActionResult<Product> Create([FromBody] CreateProductDto dto)
+    public async Task<ActionResult<Product>> Create([FromBody] CreateProductDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var product = _productService.Create(dto);
+        var product = await _productService.CreateAsync(dto);
         return CreatedAtAction(nameof(GetById), new { id = product.Id }, product);
     }
 
     [Authorize]
     [HttpPut("{id}")]
-    public ActionResult<Product> Update(int id, [FromBody] UpdateProductDto dto)
+    public async Task<ActionResult<Product>> Update(int id, [FromBody] UpdateProductDto dto)
     {
         if (!ModelState.IsValid)
             return BadRequest(ModelState);
 
-        var product = _productService.Update(id, dto);
+        var product = await _productService.UpdateAsync(id, dto);
         if (product == null)
             return NotFound();
 
@@ -66,9 +66,9 @@ public class ProductsController : ControllerBase
 
     [Authorize]
     [HttpDelete("{id}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> Delete(int id)
     {
-        if (!_productService.Delete(id))
+        if (!await _productService.DeleteAsync(id))
             return NotFound();
 
         return NoContent();

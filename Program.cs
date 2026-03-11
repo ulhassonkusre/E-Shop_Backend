@@ -3,6 +3,7 @@ using EcommerceBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +59,23 @@ builder.Services.AddAuthentication(options =>
 });
 
 builder.Services.AddAuthorization();
+
+// Configure Redis
+var redisConfiguration = builder.Configuration.GetSection("Redis");
+var redisConnection = redisConfiguration["ConnectionString"] ?? "localhost:6379";
+
+// Register Redis connection multiplexer (singleton, thread-safe)
+builder.Services.AddSingleton<IConnectionMultiplexer>(sp =>
+{
+    var config = ConfigurationOptions.Parse(redisConnection, true);
+    config.AbortOnConnectFail = false;
+    config.SyncTimeout = 5000;
+    config.AsyncTimeout = 5000;
+    return ConnectionMultiplexer.Connect(config);
+});
+
+// Register Redis cache service
+builder.Services.AddSingleton<IRedisCacheService, RedisCacheService>();
 
 // Register services
 builder.Services.AddSingleton<IAuthService, AuthService>();
