@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj": {}
+    "c:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj": {
+    "c:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj",
+        "projectUniqueName": "c:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj",
         "projectName": "EcommerceBackend",
-        "projectPath": "C:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj",
+        "projectPath": "c:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj",
         "packagesPath": "C:\\Users\\ulhas.sonkusre\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\obj\\",
+        "outputPath": "c:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
