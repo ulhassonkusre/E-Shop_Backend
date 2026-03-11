@@ -1,5 +1,6 @@
 using System.Text;
 using EcommerceBackend.Data;
+using EcommerceBackend.Data.Entities;
 using EcommerceBackend.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -73,20 +74,20 @@ builder.Services.AddDbContext<EcommerceDbContext>(options =>
         )
     ));
 
-// Configure Redis (optional caching)
+// Configure Redis (optional caching - disabled for performance)
 var redisConfiguration = builder.Configuration.GetSection("Redis");
 var redisConnection = redisConfiguration["ConnectionString"] ?? "localhost:6379";
 
-builder.Services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(sp =>
-{
-    var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConnection, true);
-    config.AbortOnConnectFail = false;
-    config.SyncTimeout = 5000;
-    config.AsyncTimeout = 5000;
-    return StackExchange.Redis.ConnectionMultiplexer.Connect(config);
-});
-
-builder.Services.AddSingleton<IRedisCacheService, RedisCacheService>();
+// Redis disabled for performance - using hardcoded products directly
+// builder.Services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(sp =>
+// {
+//     var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConnection, true);
+//     config.AbortOnConnectFail = false;
+//     config.SyncTimeout = 5000;
+//     config.AsyncTimeout = 5000;
+//     return StackExchange.Redis.ConnectionMultiplexer.Connect(config);
+// });
+// builder.Services.AddSingleton<IRedisCacheService, RedisCacheService>();
 
 // Register services (use Scoped for database services)
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -122,19 +123,78 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Initialize database
+// Initialize database and seed data
+Console.WriteLine("=== Initializing Database ===");
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<EcommerceDbContext>();
     try
     {
         await dbContext.Database.MigrateAsync();
-        Console.WriteLine("Database migrated successfully!");
+        Console.WriteLine("✓ Database migrated successfully!");
+        
+        // Ensure default user exists
+        var userCount = await dbContext.Users.CountAsync();
+        if (userCount == 0)
+        {
+            dbContext.Users.Add(new User
+            {
+                Username = "admin",
+                Email = "admin@example.com",
+                Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
+                CreatedAt = DateTime.UtcNow
+            });
+            await dbContext.SaveChangesAsync();
+            Console.WriteLine("✓ Default user created: admin@example.com / admin123");
+        }
+        else
+        {
+            Console.WriteLine($"✓ Users found: {userCount}");
+        }
+        
+        // Update product images - fix empty or old Unsplash URLs
+        var products = await dbContext.Products.ToListAsync();
+        bool imagesUpdated = false;
+        var imageMap = new Dictionary<int, string>
+        {
+            { 1, "https://picsum.photos/seed/headphones/400/300" },
+            { 2, "https://picsum.photos/seed/smartwatch/400/300" },
+            { 3, "https://picsum.photos/seed/laptop/400/300" },
+            { 4, "https://picsum.photos/seed/keyboard/400/300" },
+            { 5, "https://picsum.photos/seed/usb/400/300" },
+            { 6, "https://picsum.photos/seed/mouse/400/300" },
+            { 7, "https://picsum.photos/seed/screen/400/300" },
+            { 8, "https://picsum.photos/seed/camera/400/300" },
+            { 9, "https://picsum.photos/seed/light/400/300" },
+            { 10, "https://picsum.photos/seed/audio/400/300" },
+            { 11, "https://picsum.photos/seed/mobile/400/300" },
+            { 12, "https://picsum.photos/seed/tech/400/300" }
+        };
+
+        foreach (var product in products)
+        {
+            if (imageMap.ContainsKey(product.Id) && (string.IsNullOrEmpty(product.ImageUrl) || product.ImageUrl.Contains("unsplash")))
+            {
+                product.ImageUrl = imageMap[product.Id];
+                imagesUpdated = true;
+            }
+        }
+        
+        if (imagesUpdated)
+        {
+            await dbContext.SaveChangesAsync();
+            Console.WriteLine("✓ Product images updated to Picsum Photos");
+        }
+        
+        var productCount = await dbContext.Products.CountAsync();
+        Console.WriteLine($"✓ Products in database: {productCount}");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Error migrating database: {ex.Message}");
+        Console.WriteLine($"✗ Error initializing database: {ex.Message}");
+        Console.WriteLine($"Stack trace: {ex.StackTrace}");
     }
 }
 
+Console.WriteLine("\n=== Starting Server ===");
 app.Run("http://localhost:5000");

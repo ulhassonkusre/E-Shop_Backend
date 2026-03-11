@@ -207,26 +207,25 @@ public class CreateOrderDto
 {
     [System.ComponentModel.DataAnnotations.Required]
     public string ShippingFullName { get; set; } = string.Empty;
-    
+
     [System.ComponentModel.DataAnnotations.Required]
-    [System.ComponentModel.DataAnnotations.EmailAddress]
     public string ShippingEmail { get; set; } = string.Empty;
-    
+
     [System.ComponentModel.DataAnnotations.Required]
     public string ShippingPhone { get; set; } = string.Empty;
-    
+
     [System.ComponentModel.DataAnnotations.Required]
     public string ShippingAddress { get; set; } = string.Empty;
-    
+
     [System.ComponentModel.DataAnnotations.Required]
     public string ShippingCity { get; set; } = string.Empty;
-    
+
     [System.ComponentModel.DataAnnotations.Required]
     public string ShippingState { get; set; } = string.Empty;
-    
+
     [System.ComponentModel.DataAnnotations.Required]
     public string ShippingZipCode { get; set; } = string.Empty;
-    
+
     [System.ComponentModel.DataAnnotations.Required]
     public string ShippingCountry { get; set; } = string.Empty;
 }
