@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "K7vDXTddaZQ=",
+  "dgSpecHash": "C8lZk4B2py8=",
   "success": true,
-  "projectFilePath": "C:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj",
+  "projectFilePath": "c:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\ulhas.sonkusre\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\ulhas.sonkusre\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\8.0.0\\microsoft.aspnetcore.authentication.jwtbearer.8.0.0.nupkg.sha512",

@@ -43,3 +43,4 @@ C:\Users\ulhas.sonkusre\AlramzTestQ\ecommerce-project\backend\obj\Debug\net8.0\r
 C:\Users\ulhas.sonkusre\AlramzTestQ\ecommerce-project\backend\obj\Debug\net8.0\EcommerceBackend.pdb
 C:\Users\ulhas.sonkusre\AlramzTestQ\ecommerce-project\backend\obj\Debug\net8.0\EcommerceBackend.genruntimeconfig.cache
 C:\Users\ulhas.sonkusre\AlramzTestQ\ecommerce-project\backend\obj\Debug\net8.0\ref\EcommerceBackend.dll
+c:\Users\ulhas.sonkusre\AlramzTestQ\ecommerce-project\backend\obj\Debug\net8.0\EcommerceBackend.sourcelink.json
