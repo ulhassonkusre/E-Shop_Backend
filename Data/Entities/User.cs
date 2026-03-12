@@ -24,7 +24,7 @@ public class User
     
     [Column(TypeName = "DATETIME")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-    
+
     // Navigation properties
     public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
     public ICollection<Order> Orders { get; set; } = new List<Order>();

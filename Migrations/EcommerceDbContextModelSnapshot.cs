@@ -206,6 +206,8 @@ namespace EcommerceBackend.Migrations
 
                     b.HasIndex("Name");
 
+                    b.HasIndex("Price");
+
                     b.ToTable("Products");
 
                     b.HasData(
@@ -213,9 +215,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 1,
                             Category = "Electronics",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8283),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2736),
                             Description = "Premium noise-canceling wireless headphones with 30-hour battery life.",
-                            ImageUrl = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
+                            ImageUrl = "https://picsum.photos/seed/headphones/400/300",
                             Name = "Wireless Headphones",
                             Price = 199.99m,
                             Stock = 50
@@ -224,9 +226,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 2,
                             Category = "Electronics",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8293),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2785),
                             Description = "Feature-rich smartwatch with health tracking and GPS.",
-                            ImageUrl = "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
+                            ImageUrl = "https://picsum.photos/seed/smartwatch/400/300",
                             Name = "Smart Watch",
                             Price = 299.99m,
                             Stock = 30
@@ -235,9 +237,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 3,
                             Category = "Accessories",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8296),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2789),
                             Description = "Ergonomic aluminum laptop stand for better posture.",
-                            ImageUrl = "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+                            ImageUrl = "https://picsum.photos/seed/laptop/400/300",
                             Name = "Laptop Stand",
                             Price = 49.99m,
                             Stock = 100
@@ -246,9 +248,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 4,
                             Category = "Electronics",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8298),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2791),
                             Description = "RGB mechanical gaming keyboard with Cherry MX switches.",
-                            ImageUrl = "https://images.unsplash.com/photo-1511467687858-23d96c32e4ae?w=400",
+                            ImageUrl = "https://picsum.photos/seed/keyboard/400/300",
                             Name = "Mechanical Keyboard",
                             Price = 129.99m,
                             Stock = 45
@@ -257,9 +259,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 5,
                             Category = "Accessories",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8299),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2793),
                             Description = "7-in-1 USB-C hub with HDMI, USB 3.0, and SD card reader.",
-                            ImageUrl = "https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=400",
+                            ImageUrl = "https://picsum.photos/seed/usb/400/300",
                             Name = "USB-C Hub",
                             Price = 39.99m,
                             Stock = 80
@@ -268,9 +270,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 6,
                             Category = "Electronics",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8301),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2795),
                             Description = "Ergonomic wireless mouse with precision tracking.",
-                            ImageUrl = "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+                            ImageUrl = "https://picsum.photos/seed/mouse/400/300",
                             Name = "Wireless Mouse",
                             Price = 59.99m,
                             Stock = 60
@@ -279,9 +281,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 7,
                             Category = "Accessories",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8303),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2797),
                             Description = "Adjustable monitor stand with storage drawer.",
-                            ImageUrl = "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400",
+                            ImageUrl = "https://picsum.photos/seed/screen/400/300",
                             Name = "Monitor Stand",
                             Price = 79.99m,
                             Stock = 35
@@ -290,9 +292,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 8,
                             Category = "Electronics",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8305),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2799),
                             Description = "1080p HD webcam with built-in microphone.",
-                            ImageUrl = "https://images.unsplash.com/photo-1587829741301-dc798b91a603?w=400",
+                            ImageUrl = "https://picsum.photos/seed/camera/400/300",
                             Name = "Webcam HD",
                             Price = 89.99m,
                             Stock = 40
@@ -301,9 +303,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 9,
                             Category = "Home",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8306),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2801),
                             Description = "LED desk lamp with adjustable brightness and color temperature.",
-                            ImageUrl = "https://images.unsplash.com/photo-1507440658841-9a2dd3a70d17?w=400",
+                            ImageUrl = "https://picsum.photos/seed/light/400/300",
                             Name = "Desk Lamp",
                             Price = 44.99m,
                             Stock = 55
@@ -312,9 +314,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 10,
                             Category = "Electronics",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8308),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2802),
                             Description = "Portable Bluetooth speaker with 360-degree sound.",
-                            ImageUrl = "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400",
+                            ImageUrl = "https://picsum.photos/seed/audio/400/300",
                             Name = "Bluetooth Speaker",
                             Price = 79.99m,
                             Stock = 70
@@ -323,9 +325,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 11,
                             Category = "Accessories",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8310),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2804),
                             Description = "Adjustable phone stand for desk.",
-                            ImageUrl = "https://images.unsplash.com/photo-1586953208448-b95a79798f07?w=400",
+                            ImageUrl = "https://picsum.photos/seed/mobile/400/300",
                             Name = "Phone Stand",
                             Price = 19.99m,
                             Stock = 120
@@ -334,9 +336,9 @@ namespace EcommerceBackend.Migrations
                         {
                             Id = 12,
                             Category = "Accessories",
-                            CreatedAt = new DateTime(2026, 3, 11, 12, 10, 30, 833, DateTimeKind.Utc).AddTicks(8312),
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 56, DateTimeKind.Utc).AddTicks(2806),
                             Description = "Desktop cable management system.",
-                            ImageUrl = "https://images.unsplash.com/photo-1558002038-1091a1661116?w=400",
+                            ImageUrl = "https://picsum.photos/seed/tech/400/300",
                             Name = "Cable Organizer",
                             Price = 24.99m,
                             Stock = 90
@@ -376,6 +378,16 @@ namespace EcommerceBackend.Migrations
                         .IsUnique();
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CreatedAt = new DateTime(2026, 3, 12, 5, 37, 52, 319, DateTimeKind.Utc).AddTicks(3435),
+                            Email = "admin@example.com",
+                            Password = "$2a$11$J5Yrm0pjXOraLp2xNjkV3Opsg7EYSJv51Po.ZaNIVWR11JXzdABL6",
+                            Username = "admin"
+                        });
                 });
 
             modelBuilder.Entity("EcommerceBackend.Data.Entities.WishlistItem", b =>

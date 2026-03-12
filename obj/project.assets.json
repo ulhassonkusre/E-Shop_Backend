@@ -3207,11 +3207,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj",
+      "projectUniqueName": "C:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj",
       "projectName": "EcommerceBackend",
-      "projectPath": "c:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj",
+      "projectPath": "C:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\EcommerceBackend.csproj",
       "packagesPath": "C:\\Users\\ulhas.sonkusre\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\obj\\",
+      "outputPath": "C:\\Users\\ulhas.sonkusre\\AlramzTestQ\\ecommerce-project\\backend\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
