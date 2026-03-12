@@ -62,32 +62,40 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// Configure TiDB Database
+// Configure TiDB Database with optimized settings
 builder.Services.AddDbContext<EcommerceDbContext>(options =>
     options.UseMySql(
         builder.Configuration.GetConnectionString("DefaultConnection"),
         new MySqlServerVersion(new Version(8, 0, 0)),
-        dbOptions => dbOptions.EnableRetryOnFailure(
-            maxRetryCount: 3,
-            maxRetryDelay: TimeSpan.FromSeconds(30),
-            errorNumbersToAdd: null
-        )
+        dbOptions =>
+        {
+            dbOptions.EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(5),
+                errorNumbersToAdd: null
+            );
+            dbOptions.CommandTimeout(15); // Reduced from default 30
+            dbOptions.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery);
+        }
     ));
 
-// Configure Redis (optional caching - disabled for performance)
+// Configure Redis for fast data retrieval (lazy connection)
 var redisConfiguration = builder.Configuration.GetSection("Redis");
 var redisConnection = redisConfiguration["ConnectionString"] ?? "localhost:6379";
 
-// Redis disabled for performance - using hardcoded products directly
-// builder.Services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(sp =>
-// {
-//     var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConnection, true);
-//     config.AbortOnConnectFail = false;
-//     config.SyncTimeout = 5000;
-//     config.AsyncTimeout = 5000;
-//     return StackExchange.Redis.ConnectionMultiplexer.Connect(config);
-// });
-// builder.Services.AddSingleton<IRedisCacheService, RedisCacheService>();
+// Register Redis Connection Multiplexer as singleton (lazy connection)
+builder.Services.AddSingleton<StackExchange.Redis.IConnectionMultiplexer>(sp =>
+{
+    var config = StackExchange.Redis.ConfigurationOptions.Parse(redisConnection, true);
+    config.AbortOnConnectFail = false; // Don't fail on startup if Redis is down
+    config.SyncTimeout = 3000; // Reduced timeout
+    config.AsyncTimeout = 3000; // Reduced timeout
+    config.ConnectTimeout = 3000; // Faster connection timeout
+    config.DefaultDatabase = 0;
+    config.ConnectRetry = 2; // Fewer retries on startup
+    return StackExchange.Redis.ConnectionMultiplexer.Connect(config);
+});
+builder.Services.AddSingleton<IRedisCacheService, RedisCacheService>();
 
 // Register services (use Scoped for database services)
 builder.Services.AddScoped<IAuthService, AuthService>();
@@ -123,78 +131,66 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Initialize database and seed data
-Console.WriteLine("=== Initializing Database ===");
-using (var scope = app.Services.CreateScope())
+// Initialize database in background (non-blocking)
+Console.WriteLine("=== Initializing Database (Background) ===");
+_ = Task.Run(async () =>
 {
+    using var scope = app.Services.CreateScope();
     var dbContext = scope.ServiceProvider.GetRequiredService<EcommerceDbContext>();
     try
     {
-        await dbContext.Database.MigrateAsync();
-        Console.WriteLine("✓ Database migrated successfully!");
-        
-        // Ensure default user exists
-        var userCount = await dbContext.Users.CountAsync();
-        if (userCount == 0)
+        // Apply migrations with timeout
+        Console.WriteLine("⏳ Applying database migrations...");
+        var migrateTask = dbContext.Database.MigrateAsync();
+        if (await Task.WhenAny(migrateTask, Task.Delay(30000)) == migrateTask)
         {
-            dbContext.Users.Add(new User
-            {
-                Username = "admin",
-                Email = "admin@example.com",
-                Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
-                CreatedAt = DateTime.UtcNow
-            });
-            await dbContext.SaveChangesAsync();
-            Console.WriteLine("✓ Default user created: admin@example.com / admin123");
+            await migrateTask;
+            Console.WriteLine("✓ Database migrated successfully!");
         }
         else
         {
-            Console.WriteLine($"✓ Users found: {userCount}");
+            Console.WriteLine("⚠ Database migration timeout - continuing anyway");
         }
-        
-        // Update product images - fix empty or old Unsplash URLs
-        var products = await dbContext.Products.ToListAsync();
-        bool imagesUpdated = false;
-        var imageMap = new Dictionary<int, string>
-        {
-            { 1, "https://picsum.photos/seed/headphones/400/300" },
-            { 2, "https://picsum.photos/seed/smartwatch/400/300" },
-            { 3, "https://picsum.photos/seed/laptop/400/300" },
-            { 4, "https://picsum.photos/seed/keyboard/400/300" },
-            { 5, "https://picsum.photos/seed/usb/400/300" },
-            { 6, "https://picsum.photos/seed/mouse/400/300" },
-            { 7, "https://picsum.photos/seed/screen/400/300" },
-            { 8, "https://picsum.photos/seed/camera/400/300" },
-            { 9, "https://picsum.photos/seed/light/400/300" },
-            { 10, "https://picsum.photos/seed/audio/400/300" },
-            { 11, "https://picsum.photos/seed/mobile/400/300" },
-            { 12, "https://picsum.photos/seed/tech/400/300" }
-        };
 
-        foreach (var product in products)
+        // Ensure default user exists (quick check)
+        Console.WriteLine("⏳ Checking default user...");
+        var userCountTask = dbContext.Users.CountAsync();
+        if (await Task.WhenAny(userCountTask, Task.Delay(5000)) == userCountTask)
         {
-            if (imageMap.ContainsKey(product.Id) && (string.IsNullOrEmpty(product.ImageUrl) || product.ImageUrl.Contains("unsplash")))
+            var userCount = await userCountTask;
+            if (userCount == 0)
             {
-                product.ImageUrl = imageMap[product.Id];
-                imagesUpdated = true;
+                dbContext.Users.Add(new User
+                {
+                    Username = "admin",
+                    Email = "admin@example.com",
+                    Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
+                    CreatedAt = DateTime.UtcNow
+                });
+                await dbContext.SaveChangesAsync();
+                Console.WriteLine("✓ Default user created: admin@example.com / admin123");
+            }
+            else
+            {
+                Console.WriteLine($"✓ Users found: {userCount}");
             }
         }
-        
-        if (imagesUpdated)
-        {
-            await dbContext.SaveChangesAsync();
-            Console.WriteLine("✓ Product images updated to Picsum Photos");
-        }
-        
-        var productCount = await dbContext.Products.CountAsync();
-        Console.WriteLine($"✓ Products in database: {productCount}");
+
+        // Skip product image updates on first run (not critical)
+        Console.WriteLine("✓ Database initialization complete!");
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"✗ Error initializing database: {ex.Message}");
-        Console.WriteLine($"Stack trace: {ex.StackTrace}");
+        Console.WriteLine($"⚠ Database initialization warning: {ex.Message}");
+        // Don't crash - app can still run
     }
-}
+}).ContinueWith(t => 
+{
+    if (t.IsFaulted)
+    {
+        Console.WriteLine($"⚠ Background initialization error: {t.Exception?.GetBaseException().Message}");
+    }
+});
 
-Console.WriteLine("\n=== Starting Server ===");
+Console.WriteLine("🚀 Application starting...");
 app.Run("http://localhost:5000");
